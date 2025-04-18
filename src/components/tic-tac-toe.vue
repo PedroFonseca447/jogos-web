@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue';
+import circleIcon from '../images/circle.png';
+import crossIcon from '../images/cross.png';
 
 const winner = ref<string | null>(null);
 const isTie = ref(false);
@@ -66,89 +68,113 @@ const clearTable = () => {
 </script>
 
 <template>
-  <div class="component">
-    <h1 class="">TicTac Game</h1>
-
-    <p class="">
-      Jogador atual: <span class="">{{ currentPlayer }}</span>
+  <div class="container">
+    <h1 class="title">TicTac Game</h1>
+    
+    <p class="next-player">
+      Jogador atual:
+       <img
+        v-if="currentPlayer === 'X' || currentPlayer === 'O'"
+        :src="currentPlayer === 'X' ? crossIcon : circleIcon"
+        alt="icon"
+        class="icon"
+        />
+      <p v-if="winner">{{ winner }} wins!</p>
+      <p v-else-if="isTie">It's a tie!</p>
     </p>
-    <div class="row" v-for="(row, rowIndex) of board" :key="rowIndex">
-      <div
-        class="cell"
+    
+    
+      
+      <div class="board" v-for="(row, rowIndex) of board" :key="rowIndex">
+        <div
+        class="squares"
         v-for="(cell, cellIndex) of row"
         :key="cellIndex"
         :class="{ 'cell-x': cell === 'X', 'cell-o': cell === 'O' }"
         :disabled="cell !== null"
         @click="playMove(rowIndex, cellIndex)"
-      >
-        {{ cell }}
+        >
+        <img
+        v-if="cell === 'X' || cell === 'O'"
+        :src="cell === 'X' ? crossIcon : circleIcon"
+        alt="icon"
+        class="icon"
+        />
       </div>
+   
     </div>
+    <button class="reset" @click="clearTable()">reset game</button>
 
-    <div class="buttonAndResult">
-      <p v-if="winner">{{ winner }} wins!</p>
-      <p v-else-if="isTie">It's a tie!</p>
-      <button @click="clearTable()">reset game</button>
-    </div>
+
+   
   </div>
 </template>
 
 <style>
-body {
-  margin: 0;
+.container {
+ text-align: center;
+
+  height: 100vh;
+  overflow: hidden;
   display: flex;
-  min-width: 320px;
-  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+}
+.title{
+      margin-top: 50px;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.title img{
+      padding: 20px 20px;
+      height: 50px;
 }
-.tic-tac-toe {
-  text-align: center;
+.next-player{
+      display: flex;
+      flex-direction: column;
+}
+.next-player img{
+  padding: 20px 20px;
+
 }
 
-.board {
-  display: inline-flex;
-  margin-top: 50px;
-  background-color: #f00;
-}
-
-.row {
-  clear: both;
-}
-
-.cell {
-  width: 50px;
-  height: 50px;
-  float: left;
-  margin-right: -1px;
-  margin-bottom: -1px;
-  line-height: 50px;
-  text-align: center;
-  border: 1px solid #bbb;
-  cursor: pointer;
-  font-size: 40px;
-}
-
-.cell-x {
-  color: #f00;
-}
-
-.cell-o {
-  color: #00f;
-}
-
-button {
-  margin-top: 20px;
-  font-size: 16px;
-  padding: 10px;
-  border-radius: 5px;
-  background-color: #ccc;
+.reset{
+  width: 200px;
+  height: 80px;
   border: none;
+
+  background-color: brown;
   cursor: pointer;
+  border-radius: 40px;
+  font-size: 20px;
+  margin-top: 80px;
+}
+.squares{
+    display: flex;
+    height: 120px;
+    width: 120px;
+    background:#1f3540;
+    border-radius: 12px;
+  
+}
+
+.squares img{
+    height: 80px;
+    width: 80px;
+    margin: auto;
+}
+
+.board{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3,1fr);
+      width: auto;    /* Largura total do tabuleiro */
+    height: 150px;   /* Altura total do tabuleiro */
+    margin: 0 auto;  /* Centralizar horizontalmente */
+    gap: 10px; /* Espaçamento entre as células */
+
 }
 </style>
