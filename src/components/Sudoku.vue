@@ -7,7 +7,7 @@
         v-for="(cell, j) in row"
         :key="j"
         class="cell"
-        :class="{ fixed: originalBoard[i][j] !== 0 }"
+        :class="{ fixed: originalBoard[i][j] !== 0, selected: selectRow === i && selectCol === j }"
         @click="selectCell(i, j)"
       >
         {{ cell !== 0 ? cell : '' }}
@@ -15,7 +15,15 @@
     </div>
 
     <div class="numbers">
-      <button v-for="n in 9" :key="n" @click="setValue(n)">{{ n }}</button>
+      <button
+        v-for="n in 9"
+        :key="n"
+        class="changed"
+        @click="setValue(n)"
+        @keydown.delete="deleteValue()"
+      >
+        {{ n }}
+      </button>
     </div>
 
     <div class="controls">
@@ -97,6 +105,9 @@ function selectCell(row: number, col: number) {
   if (originalBoard[row][col] === 0) {
     selectRow.value = row;
     selectCol.value = col;
+    console.log(`Célula fixa clicada em [${row}, ${col}] com valor: ${originalBoard[row][col]}`);
+  } else {
+    console.log(`Célula fixa clicada em [${row}, ${col}] com valor: ${originalBoard[row][col]}`);
   }
 }
 
@@ -104,6 +115,10 @@ function setValue(n: number) {
   if (selectRow.value !== null && selectCol.value !== null) {
     board[selectRow.value][selectCol.value] = n;
   }
+}
+
+function deleteValue() {
+  setValue(0);
 }
 
 function isValidArray(arr: number[]): boolean {
@@ -176,6 +191,9 @@ onMounted(() => {
 .cell.fixed {
   background-color: #ddd;
   font-weight: bold;
+}
+.cell.selected {
+  background-color: greenyellow;
 }
 
 .numbers button,
